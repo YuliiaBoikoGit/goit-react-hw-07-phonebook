@@ -20,8 +20,6 @@ export const ContactForm = () => {
     const formSubmitHandler = event => {
         event.preventDefault();
 
-        console.log(event.target.name.value)
-
         const existingContact = contacts.find(contact => contact.name.toLowerCase() === event.target.name.value.toLowerCase());
 
         if (existingContact) {
