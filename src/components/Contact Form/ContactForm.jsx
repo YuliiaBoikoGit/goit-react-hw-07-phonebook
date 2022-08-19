@@ -1,14 +1,13 @@
-import { setContacts } from "redux/contacts";
-import { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { nanoid } from "nanoid";
+import { useState } from "react";
+import { useSelector } from "react-redux";
+import { useSetContactsMutation } from "redux/contactsApi";
 import { Form, Input, Label, Button } from "./ContactForm.styled";
 
 export const ContactForm = () => {
     const [name, setName] = useState('');
     const [number, setNumber] = useState('');
     const contacts = useSelector(state => state.contacts.items);
-    const dispatch = useDispatch();
+    const [setContacts] = useSetContactsMutation();
 
     const handleNameChange = event => setName(event.target.value);
     const handleNumberChange = event => setNumber(event.target.value);
@@ -21,26 +20,23 @@ export const ContactForm = () => {
     const formSubmitHandler = event => {
         event.preventDefault();
 
+        console.log(event.target.name.value)
+
         const existingContact = contacts.find(contact => contact.name.toLowerCase() === event.target.name.value.toLowerCase());
 
         if (existingContact) {
-            alert(`${event.target.name} is already in contacts`);
+            alert(`${event.target.name.value} is already in contacts`);
         } else {
             const contact = {
                 name: event.target.name.value,
                 number: event.target.number.value,
-                id: nanoid(),
             };
 
-            dispatch(setContacts(contact));    
+            setContacts(contact);
         };
         
         reset();
     };
-
-    useEffect(() => {
-        localStorage.setItem('contacts', JSON.stringify(contacts));
-    }, [contacts]);
 
     return (
         <Form onSubmit={formSubmitHandler}>
